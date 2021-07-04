@@ -3,10 +3,10 @@ package heyskoopy
 import (
 	"context"
 	"fmt"
+	db2 "github.com/rcanderson23/heyskoopy-bot/db"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/rcanderson23/heyskoopy-bot/bot/db"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -47,7 +47,7 @@ func (b *Bot) listCommand(s *discordgo.Session, input []string, m *discordgo.Mes
 func (b *Bot) listAdd(li, author string) (string, error) {
 	var resp string
 
-	err := b.DB.AddListItem(context.TODO(), db.ListItem{
+	err := b.DB.AddListItem(context.TODO(), db2.ListItem{
 		Name:    li,
 		Creator: author,
 	})
@@ -63,7 +63,7 @@ func (b *Bot) listAdd(li, author string) (string, error) {
 func (b *Bot) listDelete(li string) (string, error) {
 	var resp string
 
-	count, err := b.DB.DeleteListItem(context.TODO(), db.ListItem{
+	count, err := b.DB.DeleteListItem(context.TODO(), db2.ListItem{
 		Name: li,
 	})
 	if err != nil {
