@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/rcanderson23/heyskoopy-bot/bot/db"
-	hs "github.com/rcanderson23/heyskoopy-bot/bot/heyskoopy"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	db2 "github.com/rcanderson23/heyskoopy-bot/db"
+	"github.com/rcanderson23/heyskoopy-bot/heyskoopy"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 	"os"
 	"os/signal"
 	"regexp"
@@ -24,18 +26,24 @@ func main() {
 	dbName := os.Getenv(MongoDBName)
 	collections := strings.Split(os.Getenv(MongoCollections), ",")
 
-	mongo, err := db.NewMongo(connString, dbName, collections)
+	mongo, err := db2.NewMongo(connString, dbName, collections)
 	if err != nil {
 		log.Fatalf("failed to create mongo client: %v", err)
 	}
 
 	command := regexp.MustCompile(`^!hs?\w`)
 
-	bot := hs.Bot{
+	bot := heyskoopy.Bot{
 		DB:               mongo,
 		BotCommandString: command,
 	}
 	bot.Run(authKey)
+
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Fatal(http.ListenAndServe(":9090", nil))
+	}()
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

@@ -2,13 +2,13 @@ package heyskoopy
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/rcanderson23/heyskoopy-bot/bot/db"
+	db2 "github.com/rcanderson23/heyskoopy-bot/db"
 	log "github.com/sirupsen/logrus"
 	"regexp"
 )
 
 type Bot struct {
-	DB               db.DB
+	DB               db2.DB
 	BotCommandString *regexp.Regexp
 	session          *discordgo.Session
 }

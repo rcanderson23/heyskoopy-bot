@@ -2,6 +2,8 @@ package heyskoopy
 
 import (
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rcanderson23/heyskoopy-bot/metrics"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -12,6 +14,13 @@ func (b *Bot) MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
+
+	metrics.MessagesReceived.With(prometheus.Labels{
+		"userID": m.Author.ID,
+		"guildID": m.GuildID,
+		"channelID": m.ChannelID,
+	}).Inc()
+
 
 	b.heyReaction(s, m.Message)
 	b.kubernetesReaction(s, m.Message)
@@ -28,6 +37,13 @@ func (b *Bot) MessageReactionAdd(s *discordgo.Session, r *discordgo.MessageReact
 	if r.UserID == s.State.User.ID {
 		return
 	}
+
+	metrics.ReactionsAdded.With(prometheus.Labels{
+		"emojiID": r.Emoji.ID,
+		"emojiName": r.Emoji.Name,
+		"guildID": r.GuildID,
+		"channelID": r.ChannelID,
+	}).Inc()
 
 	err := s.MessageReactionAdd(r.ChannelID, r.MessageID, fmt.Sprintf("%s:%s", r.Emoji.Name, r.Emoji.ID))
 	if err != nil {
