@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	// MinCommandLength is the minimum number of strings that should be present to use commandRouter
 	MinCommandLength = 3
 )
 

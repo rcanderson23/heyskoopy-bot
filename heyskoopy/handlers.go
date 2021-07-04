@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (b *Bot) MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+func (b *Bot) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -28,12 +28,12 @@ func (b *Bot) MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	b.commandRouter(s, m.Message)
 }
 
-func (b *Bot) MessageUpdate(s *discordgo.Session, m *discordgo.MessageUpdate) {
+func (b *Bot) messageUpdate(s *discordgo.Session, m *discordgo.MessageUpdate) {
 	b.heyReaction(s, m.Message)
 	b.kubernetesReaction(s, m.Message)
 }
 
-func (b *Bot) MessageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+func (b *Bot) messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if r.UserID == s.State.User.ID {
 		return
 	}

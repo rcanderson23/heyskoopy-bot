@@ -1,32 +1,35 @@
 package main
 
 import (
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	db2 "github.com/rcanderson23/heyskoopy-bot/db"
-	"github.com/rcanderson23/heyskoopy-bot/heyskoopy"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"os/signal"
 	"regexp"
-	"strings"
 	"syscall"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rcanderson23/heyskoopy-bot/db"
+	"github.com/rcanderson23/heyskoopy-bot/heyskoopy"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
+	// DiscordAuthKey is the API key used by the bot to authenticate with Discord
 	DiscordAuthKey        = "DISCORD_AUTH_KEY"
+
+	// MongoConnectionString is the connection string used to connect to MongoDB
 	MongoConnectionString = "MONGO_CONNECTION_STRING"
+
+	// MongoDBName is the name of the DB
 	MongoDBName           = "MONGO_DB_NAME"
-	MongoCollections      = "MONGO_COLLECTIONS"
 )
 
 func main() {
 	authKey := os.Getenv(DiscordAuthKey)
 	connString := os.Getenv(MongoConnectionString)
 	dbName := os.Getenv(MongoDBName)
-	collections := strings.Split(os.Getenv(MongoCollections), ",")
 
-	mongo, err := db2.NewMongo(connString, dbName, collections)
+	mongo, err := db.NewMongo(connString, dbName)
 	if err != nil {
 		log.Fatalf("failed to create mongo client: %v", err)
 	}
