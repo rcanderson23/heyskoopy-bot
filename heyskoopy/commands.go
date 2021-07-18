@@ -9,7 +9,7 @@ import (
 
 const (
 	// MinCommandLength is the minimum number of strings that should be present to use commandRouter
-	MinCommandLength = 3
+	MinCommandLength = 2
 )
 
 func (b *Bot) commandRouter(s *discordgo.Session, m *discordgo.Message) {
@@ -28,18 +28,30 @@ func (b *Bot) commandRouter(s *discordgo.Session, m *discordgo.Message) {
 		return
 	}
 
+	log.Infof("Bot action invoked with command %s by %s", input[1], m.Author.Username)
+
+	var (
+		resp string
+		err  error
+	)
+
 	switch input[1] {
 	case "list":
-		b.listCommand(s, input, m)
-	default:
-		_, err := s.ChannelMessageSend(m.ChannelID, "Not a valid command")
+		resp, err = b.listCommand(input, m)
 		if err != nil {
-			log.Errorf("Failed to send message to channel: %s", m.ChannelID)
+			log.Errorf("List command failed: %v", err)
 		}
+	default:
+		resp = "Not a valid command"
+	}
+
+	_, err = s.ChannelMessageSend(m.ChannelID, resp)
+	if err != nil {
+		log.Errorf("Failed to send message to channel: %s", m.ChannelID)
 	}
 }
 
 func commandHelp() string {
 	return ">>> __**Commands:**__\n" +
-		"**List**: `!hs list <add|delete|print|help> [name]`"
+		"**List**: `!hs list <[add]|[delete]|[help]> [name]`"
 }
