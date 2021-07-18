@@ -28,7 +28,7 @@ func (b *Bot) listCommand(input []string, m *discordgo.Message) (string, error) 
 	}
 
 	command := input[2]
-	name := strings.Join(input[3:], "")
+	name := strings.Join(input[3:], " ")
 
 	log.Infof("List command with command %s by %s", command, m.Author.Username)
 
