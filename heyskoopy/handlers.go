@@ -16,11 +16,10 @@ func (b *Bot) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	metrics.MessagesReceived.With(prometheus.Labels{
-		"userID": m.Author.ID,
-		"guildID": m.GuildID,
+		"userID":    m.Author.ID,
+		"guildID":   m.GuildID,
 		"channelID": m.ChannelID,
 	}).Inc()
-
 
 	b.heyReaction(s, m.Message)
 	b.kubernetesReaction(s, m.Message)
@@ -39,9 +38,9 @@ func (b *Bot) messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReact
 	}
 
 	metrics.ReactionsAdded.With(prometheus.Labels{
-		"emojiID": r.Emoji.ID,
+		"emojiID":   r.Emoji.ID,
 		"emojiName": r.Emoji.Name,
-		"guildID": r.GuildID,
+		"guildID":   r.GuildID,
 		"channelID": r.ChannelID,
 	}).Inc()
 

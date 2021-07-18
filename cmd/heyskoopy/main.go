@@ -15,13 +15,13 @@ import (
 
 const (
 	// DiscordAuthKey is the API key used by the bot to authenticate with Discord
-	DiscordAuthKey        = "DISCORD_AUTH_KEY"
+	DiscordAuthKey = "DISCORD_AUTH_KEY"
 
 	// MongoConnectionString is the connection string used to connect to MongoDB
 	MongoConnectionString = "MONGO_CONNECTION_STRING"
 
 	// MongoDBName is the name of the DB
-	MongoDBName           = "MONGO_DB_NAME"
+	MongoDBName = "MONGO_DB_NAME"
 )
 
 func main() {
@@ -41,7 +41,6 @@ func main() {
 		BotCommandString: command,
 	}
 	bot.Run(authKey)
-
 
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())

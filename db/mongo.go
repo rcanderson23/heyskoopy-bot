@@ -26,8 +26,8 @@ type DB interface {
 
 // Mongo implements the DB interface
 type Mongo struct {
-	C           *mongo.Client
-	dbName      string
+	C      *mongo.Client
+	dbName string
 }
 
 // NewMongo creates a new Mongo object to be used by the bot
@@ -43,8 +43,8 @@ func NewMongo(connString string, dbName string) (*Mongo, error) {
 	}
 
 	return &Mongo{
-		C:           client,
-		dbName:      dbName,
+		C:      client,
+		dbName: dbName,
 	}, nil
 }
 
