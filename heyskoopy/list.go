@@ -3,44 +3,42 @@ package heyskoopy
 import (
 	"context"
 	"fmt"
-	db2 "github.com/rcanderson23/heyskoopy-bot/db"
-	"strings"
-
 	"github.com/bwmarrin/discordgo"
+	db2 "github.com/rcanderson23/heyskoopy-bot/db"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
-func (b *Bot) listCommand(s *discordgo.Session, input []string, m *discordgo.Message) {
-	var (
-		resp string
-		err  error
-	)
-
-	name := strings.Join(input[3:], " ")
-
-	switch input[2] {
-	case "add":
-		resp, err = b.listAdd(name, m.Author.ID)
-		if err != nil {
-			log.Errorf("Failed to add to list: %v", err)
-		}
-	case "delete":
-		resp, err = b.listDelete(name)
-		if err != nil {
-			log.Errorf("Failed to delete from the list: %v", err)
-		}
-	case "print":
-		resp, err = b.listPrint()
-		if err != nil {
-			log.Errorf("Failed to get the list: %v", err)
-		}
-	default:
-		resp = listHelp()
+// listCommand adds, deletes, or prints the list. The default action should be to print the list.
+func (b *Bot) listCommand(input []string, m *discordgo.Message) (string, error) {
+	if len(input) == 2 {
+		log.Infof("List command print invoked by %s", m.Author.Username)
+		return b.listPrint()
 	}
 
-	_, err = s.ChannelMessageSend(m.ChannelID, resp)
-	if err != nil {
-		log.Errorf("failed to send message: %v", err)
+	if len(input) == 3 {
+		if input[2] == "print" {
+			log.Infof("List command print invoked by %s", m.Author.Username)
+			return b.listPrint()
+		}
+
+		log.Infof("List command help invoked by %s", m.Author.Username)
+
+		return listHelp(), nil
+	}
+
+	command := input[2]
+	name := strings.Join(input[3:], "")
+
+	log.Infof("List command with command %s by %s", command, m.Author.Username)
+
+	switch command {
+	case "add":
+		return b.listAdd(name, m.Author.ID)
+	case "delete":
+		return b.listDelete(name)
+	default:
+		return listHelp(), nil
 	}
 }
 
@@ -107,6 +105,6 @@ func listHelp() string {
 	return ">>> __**List Commands:**__\n" +
 		"**Add:** `!hs list add [name]`\n" +
 		"**Delete:** `!hs list delete [name]`\n" +
-		"**Print:** `!hs list print`\n" +
-		"**Help:** `!hs list`"
+		"**Print:** `!hs list`\n" +
+		"**Help:** `!hs list help`"
 }
