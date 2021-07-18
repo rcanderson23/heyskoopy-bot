@@ -1,0 +1,25 @@
+run:
+  timeout: 5m
+  tests: false
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - deadcode
+    - depguard
+    - dupl
+    - errcheck
+    - gocritic
+    - golint
+    - gofmt
+    - gosimple
+    - govet
+    - lll
+    - misspell
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    - wsl
+
