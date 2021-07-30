@@ -47,7 +47,7 @@ func (b *Bot) commandRouter(s *discordgo.Session, m *discordgo.Message) {
 
 	_, err = s.ChannelMessageSend(m.ChannelID, resp)
 	if err != nil {
-		log.Errorf("Failed to send message to channel: %s", m.ChannelID)
+		log.Errorf("Failed to send message to channel %s: %v", m.ChannelID, err)
 	}
 }
 
