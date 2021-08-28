@@ -14,7 +14,7 @@ func (b *Bot) heyReaction(s *discordgo.Session, m *discordgo.Message) {
 	}
 
 	if hey {
-		err := s.MessageReactionAdd(m.ChannelID, m.ID, "pepecorner:730969584177381426")
+		err := s.MessageReactionAdd(m.ChannelID, m.ID, "pepeHey:880816061161803856")
 		if err != nil {
 			log.Errorf("%v", err)
 		}
